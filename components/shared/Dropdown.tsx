@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { startTransition, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import { ICategory } from "@/lib/mongodb/database/models/category.model";
 
 import {
@@ -20,6 +20,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
+import {
+  createCategory,
+  getAllCategories,
+} from "@/lib/actions/category.actions";
+import { effect } from "zod";
+import { Simulate } from "react-dom/test-utils";
+import input = Simulate.input;
 
 type DropdownProps = {
   value?: string;
@@ -30,7 +37,21 @@ const Dropdown = ({ onChangeHandler, value }: DropdownProps) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [newCategory, setNewCategory] = useState("");
 
-  const handleAddCategory = () => {};
+  const handleAddCategory = () => {
+    createCategory({ categoryName: newCategory.trim() }).then((category) => {
+      setCategories((prevState) => [...prevState, category]);
+    });
+  };
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const categoryList = await getAllCategories();
+
+      if (categoryList) setCategories(categoryList as ICategory[]);
+    };
+
+    getCategories();
+  }, []);
 
   return (
     <Select onValueChange={onChangeHandler} defaultValue={value}>

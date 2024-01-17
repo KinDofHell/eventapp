@@ -23,10 +23,14 @@ import { useState } from "react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 
+import { useUploadThing } from "@/lib/uploadthing";
+
 import Image from "next/image";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useRouter } from "next/navigation";
+import { createEvent } from "@/lib/actions/event.actions";
 
 type EventFormProps = {
   userId: string;
@@ -41,8 +45,38 @@ const EventForm = ({ userId, type }: EventFormProps) => {
     defaultValues: eventDefaultValues,
   });
 
-  function onSubmit(values: z.infer<typeof eventFormSchema>) {
-    console.log(values);
+  const { startUpload } = useUploadThing("imageUploader");
+  const router = useRouter();
+
+  async function onSubmit(values: z.infer<typeof eventFormSchema>) {
+    let uploadedImageUrl = values.imageUrl;
+
+    if (files.length > 0) {
+      const uploadedImages = await startUpload(files);
+
+      if (!uploadedImages) {
+        return;
+      }
+
+      uploadedImageUrl = uploadedImages[0].url;
+    }
+
+    if (type === "Create") {
+      try {
+        const newEvent = await createEvent({
+          event: { ...values, imageUrl: uploadedImageUrl },
+          userId,
+          path: "/profile",
+        });
+
+        if (newEvent) {
+          form.reset();
+          router.push(`/events/${newEvent._id}`);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
   }
 
   return (
@@ -243,6 +277,8 @@ const EventForm = ({ userId, type }: EventFormProps) => {
                                 Free Ticket
                               </label>
                               <Checkbox
+                                onCheckedChange={field.onChange}
+                                checked={field.value}
                                 id="isFree"
                                 className="mr-2 h-5 w-5 border-2 border-primary-500"
                               />
