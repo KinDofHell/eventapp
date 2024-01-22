@@ -76,6 +76,13 @@ export type GetRelatedEventsByCategoryParams = {
   page: number | string;
 };
 
+export type GetRelatedEventsByOrganizerParams = {
+  organizerId: string;
+  eventId: string;
+  limit?: number;
+  page: number | string;
+};
+
 export type Event = {
   _id: string;
   title: string;
