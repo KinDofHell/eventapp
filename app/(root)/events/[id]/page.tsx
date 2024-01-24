@@ -2,6 +2,7 @@ import React from "react";
 import { SearchParamProps } from "@/types";
 import {
   getEventById,
+  getEventsByUser,
   getRelatedEventsByCategory,
 } from "@/lib/actions/event.actions";
 
@@ -19,6 +20,12 @@ const EventDetails = async ({
     categoryId: event.category._id,
     eventId: event._id,
     page: searchParams.page as string,
+  });
+
+  const relatedEventsOrganizer = await getEventsByUser({
+    userId: event.organizer._id,
+    limit: 3,
+    page: 1,
   });
 
   return (
@@ -111,7 +118,7 @@ const EventDetails = async ({
           Events By {event?.organizer.firstName} {event?.organizer.lastName}
         </h2>
         <Collection
-          data={relatedEvents?.data}
+          data={relatedEventsOrganizer?.data}
           emptyTitle="No Events Found"
           emptyStateSubtext="Come back later"
           collectionType="All_Events"

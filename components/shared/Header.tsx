@@ -22,16 +22,18 @@ function Header() {
             <NavItems />
           </nav>
         </SignedIn>
-        <div className="flex w-32 justify-end gap-3">
+        <div className="flex w-40 justify-end gap-3">
           <SignedIn>
             <UserButton afterSignOutUrl="/" />
-            <MobileNav />
           </SignedIn>
           <SignedOut>
             <Button asChild className="rounded-full" size="lg">
               <Link href="/sign-in">Login</Link>
             </Button>
           </SignedOut>
+          <div className="flex items-center">
+            <MobileNav />
+          </div>
         </div>
       </div>
     </header>

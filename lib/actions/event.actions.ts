@@ -197,34 +197,3 @@ export async function getRelatedEventsByCategory({
     handleError(error);
   }
 }
-
-export async function getRelatedEventsByOrganizer({
-  organizerId,
-  eventId,
-  limit = 3,
-  page = 1,
-}: GetRelatedEventsByOrganizerParams) {
-  try {
-    await connectToDatabase();
-
-    const skipAmount = (Number(page) - 1) * limit;
-    const conditions = {
-      $and: [{ organizer: organizerId }, { _id: { $ne: eventId } }],
-    };
-
-    const eventsQuery = Event.find(conditions)
-      .sort({ createdAt: "desc" })
-      .skip(skipAmount)
-      .limit(limit);
-
-    const events = await populateEvent(eventsQuery);
-    const eventsCount = await Event.countDocuments(conditions);
-
-    return {
-      data: JSON.parse(JSON.stringify(events)),
-      totalPages: Math.ceil(eventsCount / limit),
-    };
-  } catch (error) {
-    handleError(error);
-  }
-}
