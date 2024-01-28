@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Collection from "@/components/shared/Collection";
 import { getAllEvents } from "@/lib/actions/event.actions";
+import { createUser } from "@/lib/actions/user.actions";
 
 export default async function Home() {
   const events = await getAllEvents({

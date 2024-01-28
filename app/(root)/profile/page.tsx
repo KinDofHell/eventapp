@@ -4,6 +4,7 @@ import Link from "next/link";
 import Collection from "@/components/shared/Collection";
 import { auth } from "@clerk/nextjs";
 import { getEventsByUser } from "@/lib/actions/event.actions";
+import { createUser } from "@/lib/actions/user.actions";
 
 const ProfilePage = async () => {
   const { sessionClaims } = auth();
