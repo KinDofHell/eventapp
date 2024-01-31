@@ -109,9 +109,9 @@ const EventDetails = async ({
           emptyTitle="No Events Found"
           emptyStateSubtext="Come back later"
           collectionType="All_Events"
-          limit={6}
-          page={1}
-          totalPages={2}
+          limit={3}
+          page={Number(searchParams.page)}
+          totalPages={relatedEvents?.totalPages}
         />
       </section>
       <section className="wrapper my-8 flex flex-col gap-8 md:gap-12">
@@ -123,9 +123,9 @@ const EventDetails = async ({
           emptyTitle="No Events Found"
           emptyStateSubtext="Come back later"
           collectionType="All_Events"
-          limit={6}
-          page={1}
-          totalPages={2}
+          limit={3}
+          page={Number(searchParams.page)}
+          totalPages={relatedEventsOrganizer?.totalPages}
         />
       </section>
     </>
